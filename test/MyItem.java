@@ -1,0 +1,72 @@
+package com.example.test;
+
+import com.google.android.gms.maps.model.LatLng;
+
+public class MyItem {
+    String title;
+    String addr;
+    String telNum;
+    String menu;
+    String businessHours;
+    String explanation;
+    double lat;
+    double lng;
+    int SEQ;
+
+    public MyItem(int SEQ, String title, String addr, String telNum, String menu, String businessHours
+            , String explanation, double lat, double lng) {
+        this.SEQ = SEQ;
+        this.title = title;
+        this.addr = addr;
+        this.telNum = telNum;
+        this.menu = menu;
+        this.businessHours = businessHours;
+        this.explanation = explanation;
+        this.lat = lat;
+        this.lng = lng;
+    }
+
+    public int getSEQ() { return SEQ; }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public String getBusinessHours() {
+        return businessHours;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public String getMenu() {
+        return menu;
+    }
+
+    public String getTelNum() {
+        return telNum;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int findIndex(String title) {
+        if(this.title.equals(title)) {
+            return this.getSEQ();
+        }
+        else {
+            return -1;
+        }
+    }
+
+}
