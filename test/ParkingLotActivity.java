@@ -3,6 +3,8 @@ package com.example.test;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 
@@ -36,96 +38,52 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-public class sampleActivity extends AppCompatActivity
+public class ParkingLotActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         OnMyLocationButtonClickListener,
         OnMyLocationClickListener {
 
-
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Location lastLocation;
     private LocationManager locationManager;
-    public View cardView;
-    public TextView rName, rAddr, rMenu, rTel, rBusinessHours, rExplanation;
-    // 사용할 이미지 뷰
-    private ImageView food;
-    private static final String jsonFile = "jsons/busanRestaurant.json";
 
+    private static final String parkFile = "jsons/parkSam.json";
 
-    private static String[] PERMISSIONS =
+    private static final String[] PERMISSIONS =
             {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     final LatLng CITY_HALL = new LatLng(35.17914523506671, 129.07492106277513);
-    private GoogleMap gMap;
-    ArrayList<MyItem> restaurants = new ArrayList<>();
+    private GoogleMap parkingMap;
+    ArrayList<ParkingLotItem> parkingLots = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sample);
+        setContentView(R.layout.activity_parking_lot);
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapG);
+                .findFragmentById(R.id.mapPark);
         mapFragment.getMapAsync(this);
+
     }
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        gMap = googleMap;
+        parkingMap = googleMap;
+
         if (getLocationPermission()) {
-            initMap(gMap);
+            initMap(parkingMap);
         }
         else {
             ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE);
         }
-        cardView = findViewById(R.id.cardView_Rest);
 
-        rName = findViewById(R.id.RestNametxt);
-        rBusinessHours = findViewById(R.id.businessHourstxt);
-        rAddr = findViewById(R.id.RestAddrtxt);
-        rMenu = findViewById(R.id.RestMenutxt);
-        rTel = findViewById(R.id.RestTeltxt);
-        rExplanation = findViewById(R.id.RestExptxt);
-
-        // 이미지뷰랑 연결한 부분
-        food = findViewById(R.id.foodImage);
-
-        gMap.setOnMyLocationButtonClickListener(this);
-        gMap.setOnMyLocationClickListener(this);
-        Toast.makeText(getApplicationContext(), "count" + restaurants.size(), Toast.LENGTH_LONG).show();
-
-        gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng latLng) {
-                cardView.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(@NonNull Marker marker) {
-                MyItem item = null;
-                for (int i = 0; i < restaurants.size(); i++) {
-                    if(restaurants.get(i).findIndex(marker.getTitle()) != -1) {
-                        item = restaurants.get(i);
-                    }
-                }
-                // 이미지 주소 받은 부분
-                String imageUrl = item.getImageurl();
-                rName.setText(item.getTitle());
-                rBusinessHours.setText("영업시간: " + item.getBusinessHours());
-                rAddr.setText("주소: " + item.getAddr());
-                rMenu.setText("메뉴: " + item.getMenu());
-                rTel.setText("전화번호: " + item.getTelNum());
-                rExplanation.setText("가게 설명: " + item.getExplanation());
-                //이거 통해서 연결하시면 되요.
-                Glide.with(sampleActivity.this).load(imageUrl).into(food);
-                cardView.setVisibility(View.VISIBLE);
-
-            }
-        });
+        Toast.makeText(getApplicationContext(), "길이: " + parkingLots.size(), Toast.LENGTH_LONG).show();
+        parkingMap.setOnMyLocationButtonClickListener(this);
+        parkingMap.setOnMyLocationClickListener(this);
 
     }
 
@@ -142,17 +100,16 @@ public class sampleActivity extends AppCompatActivity
 
     @SuppressLint("MissingPermission")
     public void initMap(GoogleMap googleMap) {
+
         if (getLocationPermission()) {
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
             addMarker(googleMap);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getMyLocation(), 15));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getMyLocation(), 10));
         }
         else {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(CITY_HALL, 15));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(CITY_HALL, 10));
         }
-
-
     }
 
     @SuppressLint("MissingPermission")
@@ -167,17 +124,6 @@ public class sampleActivity extends AppCompatActivity
             return CITY_HALL;
         }
     }
-
-    public void searchMyLocation() {
-        if (getLocationPermission()) {
-            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getMyLocation(), 15));
-        }
-        else {
-            Toast.makeText(getApplicationContext()
-                    , "위치사용권한 설정에 동의해주세요", Toast.LENGTH_LONG).show();
-        }
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -202,7 +148,7 @@ public class sampleActivity extends AppCompatActivity
     public JSONArray loadJson(String jsonFile) {
         String bf = "";
 
-        JSONArray restaurant = null;
+        JSONArray parkingLot = null;
         try {
             InputStream is = getAssets().open(jsonFile);
 
@@ -215,35 +161,75 @@ public class sampleActivity extends AppCompatActivity
 
             JSONObject jsonObject = new JSONObject(bf);
 
-            restaurant = jsonObject.getJSONArray("item");
+            parkingLot = jsonObject.getJSONArray("item");
 
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return restaurant;
+        return parkingLot;
     }
 
-    public void addMarker(GoogleMap googleMap) {
-        JSONArray restaurant = loadJson(jsonFile);
-        try {
-            for (int i = 0; i < restaurant.length(); i++) {
-                JSONObject rest = restaurant.getJSONObject(i);
-                MyItem item = new MyItem(rest.getInt("UC_SEQ"), rest.getString("TITLE"), rest.getString("ADDR1"), rest.getString("CNTCT_TEL")
-                        , rest.getString("RPRSNTV_MENU"), rest.getString("USAGE_DAY_WEEK_AND_TIME"), rest.getString("ITEMCNTNTS")
-                        , rest.getDouble("LAT"), rest.getDouble("LNG"), rest.getString("MAIN_IMG_NORMAL"));
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(new LatLng(item.getLat(), item.getLng()));
-                markerOptions.title(item.getTitle());
-                markerOptions.snippet(item.getMenu());
+    public static Location addrToPoint(Context context, String addr) {
+        Location location = new Location("");
+        Geocoder geocoder = new Geocoder(context);
+        List<Address> address = null;
 
+        try {
+            address = geocoder.getFromLocationName(addr, 3);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(address != null) {
+            for(int i = 0; i < address.size(); i++) {
+                Address a = address.get(i);
+                location.setLatitude(a.getLatitude());
+                location.setLongitude(a.getLongitude());
+            }
+        }
+        return location;
+    }
+
+
+    public void addMarker(GoogleMap googleMap) {
+        JSONArray parkingLot = loadJson(parkFile);
+        String addr;
+        Location l;
+        try {
+            for (int i = 0; i < parkingLot.length(); i++) {
+                JSONObject parking = parkingLot.getJSONObject(i);
+                ParkingLotItem item = new ParkingLotItem(parking.getString("pkNam"), parking.getString("jibunAddr"),
+                        parking.getString("tponNum"), parking.getString("pkGubun"), parking.getString("pkCnt"),
+                        parking.getString("svcSrtTe"), parking.getString("svcEndTe"), parking.getString("satSrtTe"), parking.getString("satEndTe"),
+                        parking.getString("hldSrtTe"), parking.getString("hldEndTe"), parking.getString("tenMin"), parking.getString("ftDay"),
+                        parking.getString("oprDay"), parking.getString("pkBascTime"), parking.getString("pkAddTime"), parking.getString("feeAdd"),
+                        parking.getString("payMtd"),parking.getString("doroAddr"));
+
+                addr = item.getPkAddr();
+                if (addr.equals('-')) {
+                    addr = item.getDoroAddr();
+                    if (addr.equals('-')) { }
+                    else {
+                        l = addrToPoint(this.getApplicationContext(),addr);
+                        item.setLatP(l.getLatitude());
+                        item.setLngP(l.getLongitude());
+                    }
+                }
+                else {
+                    l = addrToPoint(this.getApplicationContext(),addr);
+                    item.setLatP(l.getLatitude());
+                    item.setLngP(l.getLongitude());
+                }
+
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(new LatLng(item.getLatP(), item.getLngP()));
+                markerOptions.title(item.getPkName());
                 googleMap.addMarker(markerOptions);
-                restaurants.add(item);
+                parkingLots.add(item);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 }
