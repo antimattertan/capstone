@@ -16,7 +16,7 @@ public class CategoryActivity extends AppCompatActivity {
         Intent restaurantIntent = new Intent(this, RestaurantActivity.class);
         Intent galmaetgilIntent = new Intent(this, GalmaetgilActivity.class);
         Intent parkingIntent = new Intent(this, ParkingLotActivity.class);
-
+        Intent communityIntent = new Intent(this, CommunityActivity.class);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
@@ -33,6 +33,11 @@ public class CategoryActivity extends AppCompatActivity {
         findViewById(R.id.parkingCard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { startActivity(parkingIntent); }
+        });
+
+        findViewById(R.id.communityCard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { startActivity(communityIntent); }
         });
     }
 }

@@ -1,5 +1,6 @@
 package com.example.busaninfoapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,9 +12,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 public class ReviewWriteActivity extends AppCompatActivity {
 
@@ -23,6 +27,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
     private FirebaseUser user;
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +38,7 @@ public class ReviewWriteActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("users");
 
         findViewById(R.id.writeButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,18 +49,28 @@ public class ReviewWriteActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "메시지를 입력하세요.", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    String email = user.getEmail();
+                    String uid = user.getUid();
                     ratingBar = findViewById(R.id.ratingB);
                     float rating = ratingBar.getRating();
                     Review review = new Review();
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference ref = database.getReference(title).push();
-                    review.reviewId = email;
-                    review.message = message;
-                    review.title = title;
-                    review.writeTime = System.currentTimeMillis();
-                    review.rating = rating;
-                    ref.setValue(review);
+                    ref2.child(uid).child("userName").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            review.reviewId = dataSnapshot.getValue(String.class);
+                            review.message = message;
+                            review.title = title;
+                            review.writeTime = System.currentTimeMillis();
+                            review.rating = rating;
+                            ref.setValue(review);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     Toast.makeText(getApplicationContext(), "작성이 완료되었습니다.", Toast.LENGTH_LONG).show();
                     finish();
                 }

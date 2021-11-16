@@ -30,6 +30,8 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        getSupportActionBar().setTitle("부산 관광 정보앱");
+
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -72,14 +74,15 @@ public class SignInActivity extends AppCompatActivity {
         user.setUserName(name);
         user.setUserPassword(password);
 
-        DatabaseReference ref = db.getReference("user").push();
+        DatabaseReference ref = db.getReference();
+
         // 회원가입을 원하는 사용자의 정보를 전달하여 회원가입하는 부분
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            ref.setValue(user);
+                            ref.child("users").child(mAuth.getUid()).setValue(user);
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(SignInActivity.this, "" + name + "님의 회원가입이 완료되었습니다.", Toast.LENGTH_LONG).show();
                             FirebaseUser user = mAuth.getCurrentUser();

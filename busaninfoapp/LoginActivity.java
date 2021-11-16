@@ -13,15 +13,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private EditText edEmail, edPwd;
-    private String name = null;
+    public String name;
     DatabaseReference ref;
 
     @Override
@@ -33,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
 
         // 회원가입 화면 진입 인텐드
         Intent signIntent = new Intent(LoginActivity.this, SignInActivity.class);
+
+        getSupportActionBar().setTitle("부산 관광 정보앱");
 
         edEmail = findViewById(R.id.editTextID);
         edPwd = findViewById(R.id.editTextPassword);
@@ -57,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // 로그인 메서드
     private void login(String email, String password) {
-        ref = FirebaseDatabase.getInstance().getReference("user");
+        ref = FirebaseDatabase.getInstance().getReference();
         Intent mainIntent = new Intent(LoginActivity.this, CategoryActivity.class);
         // 사용자의 로그인 정보를 확인하여 로그인 하는 부분
         mAuth.signInWithEmailAndPassword(email, password)
@@ -65,14 +70,22 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            if(ref.child("userEmail").equals(email)) {
-                              name = ref.child("userName").toString();
-                            }
-                            else {
-                                Toast.makeText(LoginActivity.this, "오류!!", Toast.LENGTH_LONG).show();
-                            }
-                            // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(LoginActivity.this, "" + name + "환영합니다.", Toast.LENGTH_LONG).show();
+
+                            ref.child("users").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    User user = dataSnapshot.getValue(User.class);
+                                    name = user.getUserName();
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Toast.makeText(LoginActivity.this, "" + name + "님  환영합니다.", Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
                             //FirebaseUser user = mAuth.getCurrentUser();
                             startActivity(mainIntent);
                             finish();
