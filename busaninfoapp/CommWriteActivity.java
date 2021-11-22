@@ -70,6 +70,7 @@ public class CommWriteActivity extends AppCompatActivity {
                         community.message = message;
                         community.writeTime = System.currentTimeMillis();
                         community.imageUri = imageUri;
+                        community.postId = ref.getKey();
                         ref.setValue(community);
                         Uri image = Uri.parse(imageUri);
                     }
@@ -79,7 +80,7 @@ public class CommWriteActivity extends AppCompatActivity {
 
                     }
                 });
-                Intent intent = new Intent(CommWriteActivity.this, CommunityActivity.class);
+                Intent intent = new Intent(CommWriteActivity.this, MainCommunityActivity.class);
                 startActivity(intent);
             }
         });

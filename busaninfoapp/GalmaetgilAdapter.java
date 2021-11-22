@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.busaninfoapp;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class GalmaetgilAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GalmaetgilAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 

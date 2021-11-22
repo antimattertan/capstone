@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.busaninfoapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,9 +43,10 @@ public class TourActivity extends AppCompatActivity {
         initScrollListener();
     }
 
-    private void getDatas() {
+    public void getDatas() {
         this.recyclerDatas = new ArrayList<>();
         this.datas = parser.getDatas();
+
 
         // insert 10 datas
         for (int i = 0; i < PER_DATAS; i++) {

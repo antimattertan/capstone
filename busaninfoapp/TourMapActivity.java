@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.busaninfoapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

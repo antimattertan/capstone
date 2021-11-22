@@ -1,20 +1,22 @@
-package com.example.test;
+package com.example.busaninfoapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
-public class TourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class TourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
@@ -76,16 +78,22 @@ public class TourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView textview_mainTitle;
         private TextView textview_addr;
+        private ImageView imageView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             textview_mainTitle = itemView.findViewById(R.id.textview_mainTitle);
             textview_addr = itemView.findViewById(R.id.textview_addr);
+            imageView = itemView.findViewById(R.id.image_data);
         }
 
         public void setItem(Tour item) {
             textview_mainTitle.setText("관광코스 " + (getAdapterPosition() + 1) + ": " + item.getMainTitle());
             textview_addr.setText("주소: " + item.getAddress());
+
+            /* Glide 이미지 추출 */
+            String imageUrl = item.getmain_img_normal();
+            Glide.with(context).load(imageUrl).into(imageView);
         }
     }
 

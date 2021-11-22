@@ -2,6 +2,11 @@ package com.example.busaninfoapp;
 
 import android.net.Uri;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Community {
     public String reviewId;
     //String writerId;
@@ -11,6 +16,11 @@ public class Community {
     public String imageUri;
     public int heartCnt = 0;
     public int commentCnt = 0;
+    public String postId;
+    public Map<String, Boolean> hearts = new HashMap<>();
+
+    public String getPostId() { return postId; }
+
 
     public String getReviewId() {
         return reviewId;
@@ -29,4 +39,10 @@ public class Community {
     public int getHeartCnt() { return heartCnt; }
 
     public int getCommentCnt() { return commentCnt; }
+
+    public Map<String, Boolean> getHearts() { return hearts; }
+
+    public void setHeartCnt(int heartCnt) {
+        this.heartCnt = heartCnt;
+    }
 }

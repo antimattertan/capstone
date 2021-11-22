@@ -2,8 +2,12 @@ package com.example.busaninfoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 
@@ -14,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -24,7 +29,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import androidx.core.app.ActivityCompat;
 
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,8 +53,8 @@ public class RestaurantActivity extends AppCompatActivity implements OnMapReadyC
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Location lastLocation;
     private LocationManager locationManager;
-    public View cardView;
-    public TextView rName, rAddr, rMenu, rTel, rBusinessHours, rExplanation;
+    public View cardView, marker_view;
+    public TextView rName, rAddr, rMenu, rTel, rBusinessHours, rExplanation, tag_marker;
     // 사용할 이미지 뷰
     private ImageView food;
     private static final String jsonFile = "jsons/busanRestaurant.json";
@@ -70,6 +78,9 @@ public class RestaurantActivity extends AppCompatActivity implements OnMapReadyC
                 .findFragmentById(R.id.mapG);
         mapFragment.getMapAsync(this);
 
+        //marker_view = LayoutInflater.from(this).inflate(R.layout.restaurant_marker, null);
+        //tag_marker = marker_view.findViewById(R.id.textView5);
+
     }
 
     @Override
@@ -91,6 +102,8 @@ public class RestaurantActivity extends AppCompatActivity implements OnMapReadyC
         rExplanation = findViewById(R.id.RestExptxt);
         // 이미지뷰랑 연결한 부분
         food = findViewById(R.id.foodImage);
+
+        //setCustomMarkerView();
 
         gMap.setOnMyLocationButtonClickListener(this);
         gMap.setOnMyLocationClickListener(this);
@@ -223,6 +236,26 @@ public class RestaurantActivity extends AppCompatActivity implements OnMapReadyC
         return restaurant;
     }
 
+    public void setCustomMarkerView() {
+        marker_view = LayoutInflater.from(this).inflate(R.layout.restaurant_marker, null);
+        tag_marker = marker_view.findViewById(R.id.textView5);
+    }
+
+    public Bitmap createDrawableFromView(Context context, View view) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        return bitmap;
+    }
+
     public void addMarker(GoogleMap googleMap) {
         JSONArray restaurant = loadJson(jsonFile);
         try {
@@ -235,7 +268,10 @@ public class RestaurantActivity extends AppCompatActivity implements OnMapReadyC
                 markerOptions.position(new LatLng(item.getLat(), item.getLng()));
                 markerOptions.title(item.getTitle());
                 markerOptions.snippet(item.getMenu());
-
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.restaurant);
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                Bitmap restaurantMarker = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(restaurantMarker));
                 googleMap.addMarker(markerOptions);
                 restaurants.add(item);
             }

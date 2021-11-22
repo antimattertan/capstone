@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.busaninfoapp;
 
 public class Galmaetgil {
     private String gugan;

@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.busaninfoapp;
 
 import java.io.Serializable;
 
@@ -9,13 +9,22 @@ public class Tour implements Serializable {
     private String mainTitle;
     private String address;
     private String itemContents;
+    private String main_img_normal;
 
-    public Tour(double lat, double lon, String mainTitle, String address, String itemContents) {
+    public Tour(double lat, double lon, String mainTitle, String address, String itemContents, String main_img_normal) {
         this.lat = lat;
         this.lon = lon;
         this.mainTitle = mainTitle;
         this.address = address;
         this.itemContents = itemContents;
+        this.main_img_normal = main_img_normal;
+    }
+    public String getmain_img_normal() {
+        return main_img_normal;
+    }
+
+    public void setLat(String main_img_normal) {
+        this.main_img_normal = main_img_normal;
     }
 
     public double getLat() {
