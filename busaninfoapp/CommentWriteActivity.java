@@ -1,6 +1,7 @@
 package com.example.busaninfoapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 public class CommentWriteActivity extends AppCompatActivity {
@@ -53,6 +56,7 @@ public class CommentWriteActivity extends AppCompatActivity {
                             comment.writeId = dataSnapshot.getValue(String.class);
                             comment.writeTime = System.currentTimeMillis();
                             comment.message = textView.getText().toString();
+                            onCommentCnt(FirebaseDatabase.getInstance().getReference("/community/" + postId));
                             ref.setValue(comment);
                         }
 
@@ -64,6 +68,28 @@ public class CommentWriteActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "작성이 완료되었습니다.", Toast.LENGTH_LONG).show();
                     finish();
                 }
+            }
+        });
+
+    }
+    public void onCommentCnt(DatabaseReference communityRef) {
+        communityRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                Community community = currentData.getValue(Community.class);
+                if (community == null) {
+                    return Transaction.success(currentData);
+                } else {
+                    community.setCommentCnt(community.getCommentCnt()+1);
+                }
+                currentData.setValue(community);
+                return Transaction.success(currentData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
             }
         });
     }

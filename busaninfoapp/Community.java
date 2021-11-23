@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Community {
     public String reviewId;
+    public String userUid;
     //String writerId;
     public String message;
     //public Map<String, String> writeTime;
@@ -21,6 +22,7 @@ public class Community {
 
     public String getPostId() { return postId; }
 
+    public String getUserUid() { return userUid; }
 
     public String getReviewId() {
         return reviewId;
@@ -45,4 +47,6 @@ public class Community {
     public void setHeartCnt(int heartCnt) {
         this.heartCnt = heartCnt;
     }
+
+    public void setCommentCnt(int commentCnt) { this.commentCnt = commentCnt; }
 }

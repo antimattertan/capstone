@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,10 +49,11 @@ public class MainCommunityActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.comrecycler);
         adapter = new CommunityAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
 
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-
         ref.orderByChild("writeTime").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -136,6 +138,7 @@ public class MainCommunityActivity extends AppCompatActivity {
                 holder.heartImage.setImageResource(R.drawable.blankheart);
             }
 
+
             holder.heartImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -176,8 +179,10 @@ public class MainCommunityActivity extends AppCompatActivity {
         }
     }
 
+
     private void onHeartClick(DatabaseReference communityRef) {
         communityRef.runTransaction(new Transaction.Handler() {
+
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
