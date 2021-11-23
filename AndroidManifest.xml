@@ -22,24 +22,31 @@
             android:exported="true" />
         <activity
             android:name=".DetailCommunityActivity"
+            android:parentActivityName=".MainCommunityActivity"
             android:exported="true" />
         <activity
             android:name=".LikeCommunityActivity"
+            android:parentActivityName=".CategoryActivity"
             android:exported="true" />
         <activity
             android:name=".MineCommunityActivity"
+            android:parentActivityName=".CategoryActivity"
             android:exported="true" />
         <activity
             android:name=".MainCommunityActivity"
+            android:parentActivityName=".CategoryActivity"
             android:exported="true" />
         <activity
             android:name=".TourMapActivity"
+            android:parentActivityName=".TourActivity"
             android:exported="true" />
         <activity
             android:name=".TourActivity"
+            android:parentActivityName=".CategoryActivity"
             android:exported="true" />
         <activity
             android:name=".NewGalmaetgilActivity"
+            android:parentActivityName=".CategoryActivity"
             android:exported="true" />
         <activity
             android:name=".CommWriteActivity"
@@ -52,12 +59,14 @@
             android:exported="true" />
         <activity
             android:name=".RestaurantReviewActivity"
+            android:parentActivityName=".RestaurantActivity"
             android:exported="true" />
         <activity
             android:name=".ParkingLotActivity"
             android:exported="true" />
         <activity
             android:name=".RestaurantActivity"
+            android:parentActivityName=".CategoryActivity"
             android:exported="true" />
         <activity
             android:name=".GalmaetgilActivity"
@@ -65,18 +74,20 @@
         <activity
             android:name=".CategoryActivity"
             android:exported="true">
+        </activity>
+        <activity
+            android:name=".SignInActivity"
+            android:parentActivityName=".CategoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SignInActivity"
-            android:exported="true" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
