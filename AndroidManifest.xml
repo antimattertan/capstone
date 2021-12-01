@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,36 +20,45 @@
         android:theme="@style/Theme.BusanInfoApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".userInfoActivity"
+            android:exported="true" />
+        <activity
+            android:name=".settingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".testtActivity"
+            android:exported="true" />
+        <activity
             android:name=".CommentWriteActivity"
             android:exported="true" />
         <activity
             android:name=".DetailCommunityActivity"
-            android:parentActivityName=".MainCommunityActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".MainCommunityActivity" />
         <activity
             android:name=".LikeCommunityActivity"
-            android:parentActivityName=".CategoryActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".CategoryActivity" />
         <activity
             android:name=".MineCommunityActivity"
-            android:parentActivityName=".CategoryActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".CategoryActivity" />
         <activity
             android:name=".MainCommunityActivity"
-            android:parentActivityName=".CategoryActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".CategoryActivity" />
         <activity
             android:name=".TourMapActivity"
-            android:parentActivityName=".TourActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".TourActivity" />
         <activity
             android:name=".TourActivity"
-            android:parentActivityName=".CategoryActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".CategoryActivity" />
         <activity
             android:name=".NewGalmaetgilActivity"
-            android:parentActivityName=".CategoryActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".CategoryActivity" />
         <activity
             android:name=".CommWriteActivity"
             android:exported="true" />
@@ -59,29 +70,28 @@
             android:exported="true" />
         <activity
             android:name=".RestaurantReviewActivity"
-            android:parentActivityName=".RestaurantActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".RestaurantActivity" />
         <activity
             android:name=".ParkingLotActivity"
             android:exported="true" />
         <activity
             android:name=".RestaurantActivity"
-            android:parentActivityName=".CategoryActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".CategoryActivity" />
         <activity
             android:name=".GalmaetgilActivity"
             android:exported="true" />
         <activity
             android:name=".CategoryActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".SignInActivity"
-            android:parentActivityName=".CategoryActivity"
             android:exported="true" />
         <activity
+            android:name=".SignInActivity"
+            android:exported="true"
+            android:parentActivityName=".CategoryActivity" />
+        <activity
             android:name=".LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
