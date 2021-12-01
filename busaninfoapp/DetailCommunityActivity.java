@@ -15,10 +15,16 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -26,12 +32,21 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import javax.microedition.khronos.opengles.GL;
+
 public class DetailCommunityActivity extends AppCompatActivity {
 
     ArrayList<Comment> comments = new ArrayList<>();
-    ImageView imageView;
     TextView textView;
     CommentAdapter adapter;
+    RecyclerView recyclerView2;
+    imageSelectAdapter adapter2;
+    ImageView userImage;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
+    Uri imageU;
+    String uid;
+    FirebaseDatabase db = FirebaseDatabase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +54,21 @@ public class DetailCommunityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_community);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("커뮤니티 글 보기");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        user = mAuth.getCurrentUser();
+
+        DatabaseReference ref = db.getReference("/users");
+
         String postId = getIntent().getStringExtra("postId");
-        imageView = findViewById(R.id.imageView3);
+        recyclerView2 = findViewById(R.id.recyclerView);
         textView = findViewById(R.id.com_message);
+        userImage = findViewById(R.id.imageView3);
+
         adapter = new CommentAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         RecyclerView recyclerView = findViewById(R.id.comment_recycle);
@@ -53,9 +80,32 @@ public class DetailCommunityActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 Community community = dataSnapshot.getValue(Community.class);
-                imageView.setImageURI(Uri.parse(community.imageUri));
+
+                ArrayList<String> uri = community.getImgUri();
+                ArrayList<Uri> uriList = new ArrayList<>();
+
+                for(int i = 0; i < uri.size(); i++) {
+                    uriList.add(Uri.parse(uri.get(i)));
+                }
+
+                adapter2 = new imageSelectAdapter(uriList, getApplicationContext());
+                recyclerView2.setAdapter(adapter2);
+                recyclerView2.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                 textView.setText(community.message);
+                imageU = Uri.parse(community.getImageUri());
+                RequestOptions cropOptions = new RequestOptions();
+                Glide.with(getApplicationContext()).load(uriList.get(0)).apply(cropOptions.optionalCircleCrop()).into(userImage);
+
+                /*
+                adapter2 = new imageSelectAdapter(uriList, getApplicationContext());
+                recyclerView2.setAdapter(adapter2);
+                recyclerView2.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                userImage.setImageURI(Uri.parse(imageU));
+                //imageView.setImageURI(Uri.parse(community.imageUri));
+                textView.setText(community.message);
+                */
 
             }
 

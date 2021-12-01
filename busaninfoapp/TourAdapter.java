@@ -77,19 +77,23 @@ public class TourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView textview_mainTitle;
-        private TextView textview_addr;
+        private TextView textview_addr, textview_title, textview_contents;
         private ImageView imageView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             textview_mainTitle = itemView.findViewById(R.id.textview_mainTitle);
             textview_addr = itemView.findViewById(R.id.textview_addr);
+            textview_title = itemView.findViewById(R.id.textview_title);
+            textview_contents = itemView.findViewById(R.id.textview_contents);
             imageView = itemView.findViewById(R.id.image_data);
         }
 
         public void setItem(Tour item) {
             textview_mainTitle.setText("관광코스 " + (getAdapterPosition() + 1) + ": " + item.getMainTitle());
             textview_addr.setText("주소: " + item.getAddress());
+            textview_title.setText("제목: " + item.getTitle());
+            textview_contents.setText("내용: " + item.getItemContents());
 
             /* Glide 이미지 추출 */
             String imageUrl = item.getmain_img_normal();

@@ -10,14 +10,16 @@ public class Tour implements Serializable {
     private String address;
     private String itemContents;
     private String main_img_normal;
+    private String title;
 
-    public Tour(double lat, double lon, String mainTitle, String address, String itemContents, String main_img_normal) {
+    public Tour(double lat, double lon, String mainTitle, String address, String itemContents, String main_img_normal, String title) {
         this.lat = lat;
         this.lon = lon;
         this.mainTitle = mainTitle;
         this.address = address;
         this.itemContents = itemContents;
         this.main_img_normal = main_img_normal;
+        this.title = title;
     }
     public String getmain_img_normal() {
         return main_img_normal;
@@ -49,6 +51,14 @@ public class Tour implements Serializable {
 
     public void setMainTitle(String mainTitle) {
         this.mainTitle = mainTitle;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAddress() {

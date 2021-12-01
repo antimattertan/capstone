@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         // 회원가입 화면 진입 인텐드
         Intent signIntent = new Intent(LoginActivity.this, SignInActivity.class);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle("부산 관광 정보앱");
 
         edEmail = findViewById(R.id.editTextID);

@@ -15,6 +15,7 @@ public class Community {
     //public Map<String, String> writeTime;
     public long writeTime;
     public String imageUri;
+    public ArrayList<String> imgUri = new ArrayList<>();
     public int heartCnt = 0;
     public int commentCnt = 0;
     public String postId;
@@ -43,6 +44,8 @@ public class Community {
     public int getCommentCnt() { return commentCnt; }
 
     public Map<String, Boolean> getHearts() { return hearts; }
+
+    public ArrayList<String> getImgUri() { return imgUri; }
 
     public void setHeartCnt(int heartCnt) {
         this.heartCnt = heartCnt;

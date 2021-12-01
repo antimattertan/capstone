@@ -38,6 +38,10 @@ public class TourActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("테마 관광");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getDatas();
         initAdapter();
         initScrollListener();

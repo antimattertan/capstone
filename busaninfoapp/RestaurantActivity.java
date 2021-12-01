@@ -72,7 +72,9 @@ public class RestaurantActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle("맛집 목록");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapG);

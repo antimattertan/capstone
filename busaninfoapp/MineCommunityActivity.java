@@ -54,7 +54,9 @@ public class MineCommunityActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        getSupportActionBar().setTitle("내가 쓴 글");
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("내가 쓴 글 목록");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ref.orderByChild("writeTime").addChildEventListener(new ChildEventListener() {
             @Override
@@ -119,6 +121,8 @@ public class MineCommunityActivity extends AppCompatActivity {
 
     public class MineCommunityAdapter extends RecyclerView.Adapter<MineCommunityAdapter.MineCommunityViewHolder> {
         ArrayList<Community> mineCommunities = new ArrayList<>();
+        ArrayList<Uri> uriList = new ArrayList<>();
+        imageSelectAdapter adapter;
 
         @NonNull
         @Override
@@ -129,9 +133,19 @@ public class MineCommunityActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MineCommunityAdapter.MineCommunityViewHolder holder, int position) {
             Community community = mineCommunities.get(position);
+            ArrayList<String> uri = community.getImgUri();
+            uriList.clear();
+            for(int i = 0; i < uri.size(); i++) {
+                uriList.add(Uri.parse(uri.get(i)));
+            }
+
+            adapter = new imageSelectAdapter(uriList, getApplicationContext());
+
+            holder.recyclerView.setAdapter(adapter);
+            holder.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
 
             holder.msgText.setText(community.message);
-            holder.image.setImageURI(Uri.parse(community.getImageUri()));
             holder.heartCnt.setText(""+community.getHeartCnt());
             holder.commentCnt.setText(""+community.getCommentCnt());
 
@@ -166,12 +180,13 @@ public class MineCommunityActivity extends AppCompatActivity {
         class MineCommunityViewHolder extends RecyclerView.ViewHolder {
 
             TextView msgText, heartCnt, commentCnt;
-            ImageView image, heartImage, commentImage;
+            ImageView heartImage, commentImage;
+            RecyclerView recyclerView;
 
             public MineCommunityViewHolder(@NonNull View itemView) {
                 super(itemView);
 
-                image = itemView.findViewById(R.id.imageView);
+                recyclerView = itemView.findViewById(R.id.recyclerImage);
                 heartCnt = itemView.findViewById(R.id.heartCount);
                 commentCnt = itemView.findViewById(R.id.commentCount);
                 msgText = itemView.findViewById(R.id.msgText);

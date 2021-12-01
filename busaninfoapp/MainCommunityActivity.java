@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
@@ -43,7 +46,10 @@ public class MainCommunityActivity extends AppCompatActivity {
         Intent likeIntent = new Intent(this, LikeCommunityActivity.class);
         Intent mineIntent = new Intent(this, MineCommunityActivity.class);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle("글 목록");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         user = FirebaseAuth.getInstance();
         DatabaseReference ref = database.getReference("community");
         RecyclerView recyclerView = findViewById(R.id.comrecycler);
@@ -116,6 +122,7 @@ public class MainCommunityActivity extends AppCompatActivity {
 
     public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>{
         ArrayList<Community> communities = new ArrayList<>();
+        imageSelectAdapter adapter;
 
         @NonNull
         @Override
@@ -126,9 +133,19 @@ public class MainCommunityActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull CommunityAdapter.CommunityViewHolder holder, int position) {
             Community community = communities.get(position);
+            ArrayList<Uri> uriList = new ArrayList<>();
+            ArrayList<String> uri = community.getImgUri();
+
+            for(int i = 0; i < uri.size(); i++) {
+                uriList.add(Uri.parse(uri.get(i)));
+            }
+
+            adapter = new imageSelectAdapter(uriList, getApplicationContext());
+
+            holder.recyclerView.setAdapter(adapter);
+            holder.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
             holder.msgText.setText(community.message);
-            holder.image.setImageURI(Uri.parse(community.getImageUri()));
             holder.heartCnt.setText(""+community.getHeartCnt());
             holder.commentCnt.setText(""+community.getCommentCnt());
 
@@ -164,12 +181,13 @@ public class MainCommunityActivity extends AppCompatActivity {
         class CommunityViewHolder extends RecyclerView.ViewHolder {
 
             TextView msgText, heartCnt, commentCnt;
-            ImageView image, heartImage, commentImage;
+            ImageView heartImage, commentImage;
+            RecyclerView recyclerView;
 
             public CommunityViewHolder(@NonNull View itemView) {
                 super(itemView);
 
-                image = itemView.findViewById(R.id.imageView);
+                recyclerView = itemView.findViewById(R.id.recyclerImage);
                 heartCnt = itemView.findViewById(R.id.heartCount);
                 commentCnt = itemView.findViewById(R.id.commentCount);
                 msgText = itemView.findViewById(R.id.msgText);

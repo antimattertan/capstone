@@ -40,7 +40,8 @@ public class TourParser {
             for (int i = 0; i < dataJsonArray.length(); i++) {
                 JSONObject data = dataJsonArray.getJSONObject(i);
 
-                Tour tour = new Tour(data.getDouble("LAT"), data.getDouble("LNG"), data.getString("MAIN_TITLE"), data.getString("ADDR1"), data.getString("ITEMCNTNTS"), data.getString("MAIN_IMG_NORMAL"));
+                Tour tour = new Tour(data.getDouble("LAT"), data.getDouble("LNG"), data.getString("MAIN_TITLE"),
+                        data.getString("ADDR1"), data.getString("ITEMCNTNTS"), data.getString("MAIN_IMG_NORMAL"), data.getString("TITLE"));
                 datas.add(tour);
             }
         } catch (Exception e) {

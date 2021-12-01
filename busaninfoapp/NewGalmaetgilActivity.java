@@ -33,6 +33,10 @@ public class NewGalmaetgilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_galmaetgil);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("갈맷길 코스 정보");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         parser = new GalmaetgilParser(NewGalmaetgilActivity.this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);

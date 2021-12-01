@@ -29,7 +29,7 @@ public class CommentWriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_write);
 
-        getSupportActionBar().setTitle("댓글 작성");
+        //getSupportActionBar().setTitle("댓글 작성");
 
         String postId = getIntent().getStringExtra("postId");
         mAuth = FirebaseAuth.getInstance();
