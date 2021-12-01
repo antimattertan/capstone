@@ -24,6 +24,8 @@
                 android:layout_height="wrap_content"
                 android:text="관광코스 1 : "
                 android:textSize="20sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textStyle="bold" />
 
             <TextView
@@ -31,7 +33,28 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:text="주소 : "
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textview_title"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="제목 : "
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textview_contents"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="내용 : "
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <ImageView

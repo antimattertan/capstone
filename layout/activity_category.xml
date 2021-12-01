@@ -9,6 +9,7 @@
     android:weightSum="5"
     tools:context=".CategoryActivity">
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/toiletCard"
         android:layout_width="match_parent"
